@@ -12,14 +12,25 @@ import { match } from "ts-pattern"
 
 // TODO 1: Those type alias are only placeholders,
 //  use correct type definitions and feel free to add more...
-export type Rover = unknown
-export type Position = unknown
-export type Direction = unknown
-export type Planet = unknown
-export type Size = unknown
-export type Obstacle = unknown
-export type Command = unknown
-export type Commands = unknown
+export type Rover = { position: Position; orientation: Direction }
+export type Position = { x: number; y: number }
+export type Direction = "N" | "S" | "E" | "W"
+export type Planet = { size: Size; obstacles: ReadonlyArray<Obstacle> }
+export type Size = { width: number; height: number }
+export type Obstacle = Position
+export type Command = "F" | "B" | "L" | "R"
+export type Commands = ReadonlyArray<Command>
+
+export const rover = (position: Position, orientation: Direction) => ({
+  position,
+  orientation,
+})
+
+export const position = (x: number, y: number) => ({ x, y })
+
+export const planet = (size: Size) => ({ size, obstacles: [] })
+
+export const size = (width: number, height: number) => ({ width, height })
 
 // TODO 2: Execute all commands and return final rover state
 export const executeAll = (
@@ -33,28 +44,58 @@ export const executeAll = (
 // TODO 3: Dispatch each command to the specific function
 export const execute =
   (planet: Planet) =>
-  (rover: Rover, command: Command): Rover => {
-    throw new Error("TODO")
+  (r: Rover, command: Command): Rover => {
+    return match(command)
+      .with("F", () => moveForward(planet, r))
+      .with("B", () => moveBackward(planet, r))
+      .with("L", () => turnLeft(r))
+      .with("R", () => turnRight(r))
+      .exhaustive()
   }
 
 // TODO 4: Change rover direction
-const turnRight = (rover: Rover): Rover => {
-  throw new Error("TODO")
+const turnRight = (r: Rover): Rover => {
+  return match(r.orientation)
+    .with("N", () => rover(r.position, "E"))
+    .with("E", () => rover(r.position, "S"))
+    .with("S", () => rover(r.position, "W"))
+    .with("W", () => rover(r.position, "N"))
+    .exhaustive()
 }
 
 // TODO 5: Change rover direction
-const turnLeft = (rover: Rover): Rover => {
-  throw new Error("TODO")
+const turnLeft = (r: Rover): Rover => {
+  return match(r.orientation)
+    .with("N", () => rover(r.position, "W"))
+    .with("E", () => rover(r.position, "N"))
+    .with("S", () => rover(r.position, "E"))
+    .with("W", () => rover(r.position, "S"))
+    .exhaustive()
 }
 
 // TODO 6: Change rover position
-const moveForward = (planet: Planet, rover: Rover): Rover => {
-  throw new Error("TODO")
+const moveForward = (planet: Planet, r: Rover): Rover => {
+  return match(r.orientation)
+    .with("N", () =>
+      rover(
+        position(r.position.x, wrap(r.position.y + 1, planet.size.height, 1)),
+        "N",
+      ),
+    )
+    .with("E", () => rover(position(r.position.x + 1, r.position.y), "E"))
+    .with("S", () => rover(position(r.position.x, r.position.y - 1), "S"))
+    .with("W", () => rover(position(r.position.x - 1, r.position.y), "W"))
+    .exhaustive()
 }
 
 // TODO 7: Change rover position
-const moveBackward = (planet: Planet, rover: Rover): Rover => {
-  throw new Error("TODO")
+const moveBackward = (planet: Planet, r: Rover): Rover => {
+  return match(r.orientation)
+    .with("N", () => rover(position(r.position.x, r.position.y - 1), "N"))
+    .with("E", () => rover(position(r.position.x - 1, r.position.y), "E"))
+    .with("S", () => rover(position(r.position.x, r.position.y + 1), "S"))
+    .with("W", () => rover(position(r.position.x + 1, r.position.y), "W"))
+    .exhaustive()
 }
 
 // NOTE: utility function for the pacman effect

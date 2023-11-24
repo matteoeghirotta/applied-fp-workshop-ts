@@ -1,7 +1,14 @@
-import { execute, executeAll } from "../src/version1"
+import {
+  execute,
+  executeAll,
+  planet,
+  size,
+  rover,
+  position,
+} from "../src/version1"
 
 // TODO 1: gradually eliminate the "skip marker" and check that the test is green
-describe.skip("version 1", () => {
+describe("version 1", () => {
   // Planet layout
   // +-----+-----+-----+-----+-----+
   // | 0,3 |     |     |     | 4,3 |
@@ -15,15 +22,22 @@ describe.skip("version 1", () => {
 
   // NOTE: each test describe the scenario in pseudo-code
 
-  test.skip("turn right command", () => {
-    //    planet = Planet:  5 4 (no obstacles)
-    //    rover = Rover: 0 0 N
-    //    command = Command: R
-    //    result = execute(planet, rover, command)
-    //    expect(result).toBe(Rover: 0 0 E)
+  test("turn right command", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 0), "N")
+    const c = "R"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 0), "E"))
   })
 
-  test.skip("turn left command", () => {
+  test("turn left command", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 0), "N")
+    const c = "L"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 0), "W"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 0 N
     //    command = Command: L
@@ -31,7 +45,13 @@ describe.skip("version 1", () => {
     //    assertEquals(result, Rover: 0 0 W)
   })
 
-  test.skip("move forward command", () => {
+  test("move forward command", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 1), "N")
+    const c = "F"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 2), "N"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 1 N
     //    command = Command: F
@@ -39,7 +59,13 @@ describe.skip("version 1", () => {
     //    expect(result).toBe(Rover: 0 2 N)
   })
 
-  test.skip("move forward command, opposite direction", () => {
+  test("move forward command, opposite direction", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 1), "S")
+    const c = "F"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 0), "S"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 1 S
     //    command = Command: F
@@ -47,7 +73,13 @@ describe.skip("version 1", () => {
     //    expect(result).toBe(Rover: 0 0 S)
   })
 
-  test.skip("move backward command", () => {
+  test("move backward command", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 1), "N")
+    const c = "B"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 0), "N"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 1 N
     //    command = Command: B
@@ -55,7 +87,13 @@ describe.skip("version 1", () => {
     //    expect(result).toBe(Rover: 0 0 N)
   })
 
-  test.skip("move forward command, opposite direction", () => {
+  test("move forward command, opposite direction", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 1), "S")
+    const c = "B"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 2), "S"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 1 S
     //    command = Command: B
@@ -63,7 +101,13 @@ describe.skip("version 1", () => {
     //    expect(result).toBe(Rover: 0 2 S)
   })
 
-  test.skip("wrap on North", () => {
+  test("wrap on North", () => {
+    const p = planet(size(5, 4))
+    const r = rover(position(0, 3), "N")
+    const c = "F"
+
+    const result = execute(p)(r, c)
+    expect(result).toStrictEqual(rover(position(0, 0), "N"))
     //    planet = Planet: 5 4 (no obstacles)
     //    rover = Rover: 0 3 N
     //    command = Command: F
