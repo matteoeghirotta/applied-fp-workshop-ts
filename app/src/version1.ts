@@ -76,12 +76,7 @@ const turnLeft = (r: Rover): Rover => {
 // TODO 6: Change rover position
 const moveForward = (planet: Planet, r: Rover): Rover => {
   return match(r.orientation)
-    .with("N", () =>
-      rover(
-        position(r.position.x, wrap(r.position.y + 1, planet.size.height, 1)),
-        "N",
-      ),
-    )
+    .with("N", () => rover(position(r.position.x, r.position.y + 1), "N"))
     .with("E", () => rover(position(r.position.x + 1, r.position.y), "E"))
     .with("S", () => rover(position(r.position.x, r.position.y - 1), "S"))
     .with("W", () => rover(position(r.position.x - 1, r.position.y), "W"))
